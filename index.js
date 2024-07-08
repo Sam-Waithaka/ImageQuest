@@ -19,7 +19,51 @@ function createImage(imageObj){
   const image = document.createElement("img");
   // styling for the elements
   image.src = imageObj.urls.regular;
-  image.alt = imageObj.alt_description;
+  image.alt = imageObj.alt_description;const divForImg = document.getElementById("img-box");
+  const searchButton = document.getElementById("search-button");
+  const searchInput = document.getElementById("search-input");
+  
+  const UNSPLASH_ACCESS_KEY = "u5Q7KR-udGpEt259UTNIYAuWjHOhAgKGVzEMECRXp0c";
+  
+  function makeRequestToUnsplash(query) {
+    const requestUrl = `https://api.unsplash.com/search/photos?page=1&query=${query}&client_id=${UNSPLASH_ACCESS_KEY}`;
+    fetch(requestUrl)
+      .then(res => res.json())
+      .then(data => {
+        divForImg.innerHTML = ""; // Clear previous images
+        data.results.forEach(imageObj => {
+          createImage(imageObj);
+        });
+      });
+  }
+  
+  function createImage(imageObj) {
+    const imageDiv = document.createElement("div");
+    const image = document.createElement("img");
+  
+    // Styling for the elements
+    image.src = imageObj.urls.regular;
+    image.alt = imageObj.alt_description;
+    image.style.margin = "20px";
+    image.style.width = "600px";
+    image.style.height = "500px";
+    image.style.border = "double 4px black";
+  
+    imageDiv.append(image);
+    divForImg.append(imageDiv);
+  }
+  
+  // Event listener for the search button
+  searchButton.addEventListener("click", () => {
+    const query = searchInput.value;
+    if (query) {
+      makeRequestToUnsplash(query);
+    }
+  });
+  
+  // Initial load with a default search term
+  makeRequestToUnsplash("expensive-cars");
+  
   image.style.margin = "20px";
   image.style.width = "600px";
   image.style.height = "500px";
